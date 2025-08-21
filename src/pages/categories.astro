@@ -1,0 +1,403 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Mock categories data with detailed information
+const categories = [
+  {
+    name: 'BDSM',
+    slug: 'bdsm',
+    description: 'Découvrez l\'univers fascinant du BDSM : bondage, domination, soumission, sadomasochisme et plus encore. Des guides de sécurité essentiels et des pratiques responsables.',
+    icon: '🔗',
+    color: 'from-red-500 to-red-700',
+    bgColor: 'bg-red-500/20',
+    borderColor: 'border-red-500/30',
+    textColor: 'text-red-300',
+    count: 8,
+    featuredPosts: [
+      'Découverte du BDSM : Guide Complet pour Débutants',
+      'BDSM : Protocoles de Sécurité Essentiels',
+      'Le Bondage : Techniques et Sécurité'
+    ],
+    tags: ['Bondage', 'Domination', 'Soumission', 'Sécurité', 'Protocoles', 'Consentement']
+  },
+  {
+    name: 'Libertinage',
+    slug: 'libertinage',
+    description: 'Explorez l\'art du libertinage moderne : éthique, consentement, communication et exploration des plaisirs partagés dans un cadre respectueux et bienveillant.',
+    icon: '💋',
+    color: 'from-purple-500 to-purple-700',
+    bgColor: 'bg-purple-500/20',
+    borderColor: 'border-purple-500/30',
+    textColor: 'text-purple-300',
+    count: 6,
+    featuredPosts: [
+      'L\'Art du Libertinage Moderne : Éthique et Plaisir',
+      'Première Expérience Libertinage : Guide du Débutant',
+      'Libertinage en Couple : Communication et Confiance'
+    ],
+    tags: ['Éthique', 'Consentement', 'Plaisir', 'Communication', 'Confiance', 'Exploration']
+  },
+  {
+    name: 'Roleplay',
+    slug: 'roleplay',
+    description: 'Plongez dans l\'art du roleplay avec des scénarios sophistiqués, des techniques d\'immersion et des conseils pour créer des expériences intenses et mémorables.',
+    icon: '🎭',
+    color: 'from-blue-500 to-blue-700',
+    bgColor: 'bg-blue-500/20',
+    borderColor: 'border-blue-500/30',
+    textColor: 'text-blue-300',
+    count: 4,
+    featuredPosts: [
+      'Scénarios de Roleplay Avancés : Créer l\'Intensité',
+      'Roleplay pour Débutants : Premiers Pas',
+      'Costumes et Accessoires pour Roleplay'
+    ],
+    tags: ['Scénarios', 'Intensité', 'Créativité', 'Immersion', 'Costumes', 'Accessoires']
+  },
+  {
+    name: 'Sex Toys',
+    slug: 'sex-toys',
+    description: 'Guide complet des sex toys : comment choisir, utiliser et intégrer ces accessoires érotiques dans votre vie intime pour des expériences plus riches et satisfaisantes.',
+    icon: '🦄',
+    color: 'from-pink-500 to-pink-700',
+    bgColor: 'bg-pink-500/20',
+    borderColor: 'border-pink-500/30',
+    textColor: 'text-pink-300',
+    count: 3,
+    featuredPosts: [
+      'Sex Toys : Guide Complet du Choix à l\'Utilisation',
+      'Les Meilleurs Sex Toys pour Débutants',
+      'Entretien et Hygiène des Sex Toys'
+    ],
+    tags: ['Guide', 'Utilisation', 'Plaisir', 'Hygiène', 'Entretien', 'Choix']
+  },
+  {
+    name: 'Fantasmes',
+    slug: 'fantasmes',
+    description: 'Osez explorer vos fantasmes les plus profonds dans un cadre sécurisé et bienveillant. Découvrez comment partager et réaliser vos désirs les plus intimes.',
+    icon: '✨',
+    color: 'from-orange-500 to-orange-700',
+    bgColor: 'bg-orange-500/20',
+    borderColor: 'border-orange-500/30',
+    textColor: 'text-orange-300',
+    count: 5,
+    featuredPosts: [
+      'Fantasmes et Tabous : L\'Art de l\'Exploration Consciente',
+      'Comment Partager ses Fantasmes avec son Partenaire',
+      'Fantasmes BDSM : Exploration Sécurisée'
+    ],
+    tags: ['Tabous', 'Exploration', 'Découverte', 'Partage', 'Réalisation', 'Sécurité']
+  },
+  {
+    name: 'Communication',
+    slug: 'communication',
+    description: 'Maîtrisez l\'art de la communication sexuelle : exprimer vos désirs, établir vos limites et créer une intimité plus profonde et satisfaisante avec votre partenaire.',
+    icon: '💬',
+    color: 'from-green-500 to-green-700',
+    bgColor: 'bg-green-500/20',
+    borderColor: 'border-green-500/30',
+    textColor: 'text-green-300',
+    count: 4,
+    featuredPosts: [
+      'Communication Sexuelle : Le Secret d\'une Vie Érotique Épanouie',
+      'Comment Parler de ses Désirs sans Gêne',
+      'Communication dans le Couple : Bâtir la Confiance'
+    ],
+    tags: ['Couple', 'Désirs', 'Intimité', 'Confiance', 'Expression', 'Limites']
+  }
+];
+
+// Get search params for filtering
+const { searchParams } = Astro.url;
+const search = searchParams.get('search') || '';
+
+// Filter categories based on search
+let filteredCategories = categories;
+if (search) {
+  filteredCategories = categories.filter(cat => 
+    cat.name.toLowerCase().includes(search.toLowerCase()) ||
+    cat.description.toLowerCase().includes(search.toLowerCase()) ||
+    cat.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
+  );
+}
+---
+
+<Layout 
+  title="Catégories - Mad2Moi Blog"
+  description="Explorez nos catégories de contenu sur l'exploration érotique, le BDSM, le libertinage et le bien-être sexuel. Trouvez le contenu qui correspond à vos intérêts."
+>
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-secondary-900 via-primary-900 to-secondary-800">
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ec4899" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 font-elegant text-glow">
+        Catégories <span class="text-primary-400">Mad2Moi</span>
+      </h1>
+      <p class="text-xl text-secondary-300 mb-8 max-w-3xl mx-auto">
+        Explorez nos différentes catégories de contenu et trouvez ce qui vous intéresse le plus
+      </p>
+      
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto mb-8">
+        <form class="flex gap-4" method="GET">
+          <input
+            type="search"
+            name="search"
+            placeholder="Rechercher une catégorie..."
+            value={search}
+            class="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent text-white placeholder-white/60 backdrop-blur-sm text-lg"
+          />
+          <button
+            type="submit"
+            class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+          >
+            🔍 Rechercher
+          </button>
+        </form>
+      </div>
+      
+      <!-- Active search filter -->
+      {search && (
+        <div class="flex justify-center mb-6">
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-sm border border-primary-500/30">
+              Recherche: {search}
+            </span>
+            <a href="/categories" class="px-3 py-1 bg-secondary-500/20 text-secondary-300 rounded-full text-sm border border-secondary-500/30 hover:bg-secondary-500/30 transition-colors">
+              ✕ Effacer
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Categories Grid -->
+  <section class="py-20 bg-gradient-to-b from-secondary-900 to-secondary-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {filteredCategories.length > 0 ? (
+        <>
+          <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-white mb-4 font-elegant">
+              {search ? `Résultats de recherche` : 'Toutes nos catégories'}
+            </h2>
+            <p class="text-secondary-300">
+              {filteredCategories.length} catégorie{filteredCategories.length > 1 ? 's' : ''} trouvée{filteredCategories.length > 1 ? 's' : ''}
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {filteredCategories.map((category) => (
+              <div class="card-sensual hover:border-glow group transform hover:scale-105 transition-all duration-500">
+                <!-- Category Header -->
+                <div class="flex items-center gap-4 mb-6">
+                  <div class={`w-16 h-16 bg-gradient-to-br ${category.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <span class="text-3xl">{category.icon}</span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-white mb-2 font-elegant group-hover:text-primary-400 transition-colors">
+                      {category.name}
+                    </h3>
+                    <div class="flex items-center gap-4">
+                      <span class={`px-3 py-1 ${category.bgColor} ${category.textColor} rounded-full text-sm font-medium border ${category.borderColor}`}>
+                        {category.count} article{category.count > 1 ? 's' : ''}
+                      </span>
+                      <a 
+                        href={`/blog?category=${category.slug}`}
+                        class="text-primary-400 hover:text-primary-300 text-sm font-medium transition-colors"
+                      >
+                        Voir tous les articles →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Category Description -->
+                <p class="text-secondary-300 mb-6 leading-relaxed">
+                  {category.description}
+                </p>
+                
+                <!-- Featured Posts -->
+                <div class="mb-6">
+                  <h4 class="text-white font-semibold mb-3">Articles populaires :</h4>
+                  <ul class="space-y-2">
+                    {category.featuredPosts.map((post) => (
+                      <li class="flex items-center gap-2 text-secondary-300 hover:text-primary-300 transition-colors">
+                        <span class="text-primary-400">•</span>
+                        <span class="text-sm">{post}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-2">
+                  {category.tags.map((tag) => (
+                    <span class={`px-2 py-1 ${category.bgColor} ${category.textColor} rounded text-xs border ${category.borderColor}`}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                
+                <!-- Explore Button -->
+                <div class="mt-6 pt-6 border-t border-secondary-600/30">
+                  <a 
+                    href={`/blog?category=${category.slug}`}
+                    class={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${category.color} text-white font-semibold rounded-lg hover:scale-105 transition-all duration-300 shadow-lg`}
+                  >
+                    <span>Explorer {category.name}</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="text-center py-20">
+          <div class="text-8xl mb-6 opacity-60">🔍</div>
+          <h2 class="text-3xl font-bold text-white mb-4 font-elegant">
+            Aucune catégorie trouvée
+          </h2>
+          <p class="text-secondary-300 mb-8 max-w-md mx-auto">
+            Aucune catégorie ne correspond à votre recherche. Essayez avec d'autres mots-clés ou parcourez toutes nos catégories.
+          </p>
+          <a href="/categories" class="btn-primary">
+            🏷️ Voir toutes les catégories
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Quick Stats -->
+  <section class="py-20 bg-gradient-to-b from-secondary-800 to-secondary-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-white mb-4 font-elegant">
+          Statistiques du Blog
+        </h2>
+        <p class="text-secondary-300">
+          Découvrez l'étendue de notre contenu éducatif
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center group">
+          <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+            📚
+          </div>
+          <div class="text-4xl font-bold text-white mb-2 text-glow">
+            {categories.reduce((total, cat) => total + cat.count, 0)}+
+          </div>
+          <div class="text-secondary-400">Articles Totaux</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+            🏷️
+          </div>
+          <div class="text-4xl font-bold text-white mb-2 text-glow">
+            {categories.length}
+          </div>
+          <div class="text-secondary-400">Catégories</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+            ✍️
+          </div>
+          <div class="text-4xl font-bold text-white mb-2 text-glow">
+            3
+          </div>
+          <div class="text-secondary-400">Auteurs</div>
+        </div>
+        
+        <div class="text-center group">
+          <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+            🔥
+          </div>
+          <div class="text-4xl font-bold text-white mb-2 text-glow">
+            100%
+          </div>
+          <div class="text-secondary-400">Contenu Mature</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter CTA -->
+  <section class="py-20 bg-gradient-to-r from-primary-900 to-secondary-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl font-bold text-white mb-6 font-elegant">
+        Restez Informé des Dernières Tendances
+      </h2>
+      <p class="text-xl text-primary-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+        Recevez nos meilleurs articles directement dans votre boîte mail. 
+        <span class="text-white font-semibold">Pas de spam, juste du contenu de qualité pour adultes.</span>
+      </p>
+      
+      <form class="max-w-md mx-auto flex gap-4 mb-6" id="categories-newsletter">
+        <input
+          type="email"
+          placeholder="Votre adresse email"
+          class="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent text-white placeholder-white/60 backdrop-blur-sm"
+          required
+        />
+        <button
+          type="submit"
+          class="px-6 py-3 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors duration-200"
+        >
+          S'abonner
+        </button>
+      </form>
+      
+      <p class="text-sm text-primary-200">
+        En vous abonnant, vous acceptez notre 
+        <a href="/privacy" class="underline hover:no-underline text-white">politique de confidentialité</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const categoriesNewsletter = document.getElementById('categories-newsletter');
+    
+    if (categoriesNewsletter) {
+      categoriesNewsletter.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target as HTMLFormElement);
+        const email = formData.get('email') as string;
+        
+        if (!email) return;
+        
+        try {
+          const response = await fetch('/api/newsletter/subscribe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          });
+          
+          if (response.ok) {
+            alert('Merci pour votre inscription ! Vous recevrez bientôt nos derniers articles.');
+            (e.target as HTMLFormElement).reset();
+          } else {
+            alert('Une erreur est survenue. Veuillez réessayer.');
+          }
+        } catch (error) {
+          console.error('Newsletter subscription error:', error);
+          alert('Une erreur est survenue. Veuillez réessayer.');
+        }
+      });
+    }
+  });
+</script>
+
+

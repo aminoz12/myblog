@@ -1,0 +1,248 @@
+---
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import GlobalTranslator from '../components/common/GlobalTranslator.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  tags?: string[];
+  canonicalURL?: string;
+}
+
+const {
+  title,
+  description = 'Blog mature et sophistiqué sur l\'exploration érotique et le bien-être sexuel',
+  image = '/images/og-default.jpg',
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  author,
+  tags = [],
+  canonicalURL
+} = Astro.props;
+
+const siteTitle = title === 'Mad2Moi Blog - Exploration Érotique & Bien-être' ? title : `${title} | Mad2Moi Blog`;
+const siteURL = Astro.site || 'https://your-domain.com';
+const fullImageURL = image.startsWith('http') ? image : `${siteURL}${image}`;
+const canonical = canonicalURL || `${siteURL}${Astro.url.pathname}`;
+---
+
+<!doctype html>
+<html lang="fr" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Age verification -->
+    <meta name="rating" content="adult" />
+    <meta name="classification" content="adult" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonical} />
+    
+    <!-- SEO Meta Tags -->
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={tags.join(', ')} />
+    {author && <meta name="author" content={author} />}
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={fullImageURL} />
+    <meta property="og:site_name" content="Mad2Moi Blog" />
+    <meta property="og:locale" content="fr_FR" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {author && <meta property="article:author" content={author} />}
+    {tags.map(tag => <meta property="article:tag" content={tag} />)}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={siteTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={fullImageURL} />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ec4899" />
+    <meta name="msapplication-TileColor" content="#ec4899" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="Mad2Moi Blog RSS Feed" href="/rss.xml" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Mad2Moi Blog",
+        "description": "Blog mature et sophistiqué sur l'exploration érotique et le bien-être sexuel",
+        "url": siteURL,
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": `${siteURL}/blog?search={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    
+    {type === 'article' && (
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": title,
+          "description": description,
+          "image": fullImageURL,
+          "author": {
+            "@type": "Person",
+            "name": author || "Mad2Moi Blog"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Mad2Moi Blog",
+            "logo": {
+              "@type": "ImageObject",
+              "url": `${siteURL}/favicon.svg`
+            }
+          },
+          "datePublished": publishedTime,
+          "dateModified": modifiedTime || publishedTime,
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": canonical
+          }
+        }
+      </script>
+    )}
+  </head>
+  <body class="bg-gradient-to-br from-secondary-900 via-primary-900 to-secondary-800 text-white antialiased">
+    <Header />
+    <main class="min-h-screen">
+      <slot />
+    </main>
+    <Footer />
+    <GlobalTranslator />
+    
+    <!-- Analytics (Google Analytics 4) -->
+    <!-- Uncomment and replace with your GA4 measurement ID -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    -->
+    
+    <!-- Cookie Consent (optional) -->
+    <div id="cookie-consent" class="fixed bottom-4 left-4 right-4 bg-secondary-800/90 backdrop-blur-sm text-white p-4 rounded-lg shadow-lg z-50 hidden border border-secondary-600/50">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex-1">
+          <p class="text-sm">
+            Ce site utilise des cookies pour améliorer votre expérience. 
+            <a href="/privacy" class="underline hover:no-underline text-primary-300">En savoir plus</a>
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <button id="accept-cookies" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm rounded transition-colors">
+            Accepter
+          </button>
+          <button id="decline-cookies" class="px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white text-sm rounded transition-colors">
+            Refuser
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Cookie consent functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        const cookieConsent = document.getElementById('cookie-consent');
+        const acceptBtn = document.getElementById('accept-cookies');
+        const declineBtn = document.getElementById('decline-cookies');
+        
+        // Check if user has already made a choice
+        const cookieChoice = localStorage.getItem('cookie-consent');
+        
+        if (!cookieChoice && cookieConsent) {
+          cookieConsent.classList.remove('hidden');
+        }
+        
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookie-consent', 'accepted');
+            cookieConsent?.classList.add('hidden');
+            // Initialize analytics here if accepted
+          });
+        }
+        
+        if (declineBtn) {
+          declineBtn.addEventListener('click', () => {
+            localStorage.setItem('cookie-consent', 'declined');
+            cookieConsent?.classList.add('hidden');
+          });
+        }
+      });
+      
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+      
+      // Back to top functionality
+      const backToTop = document.createElement('button');
+      backToTop.innerHTML = '↑';
+      backToTop.className = 'fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-full shadow-lg transition-all duration-300 opacity-0 invisible z-40 hover:scale-110';
+      backToTop.setAttribute('aria-label', 'Retour en haut');
+      document.body.appendChild(backToTop);
+      
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          backToTop.classList.remove('opacity-0', 'invisible');
+        } else {
+          backToTop.classList.add('opacity-0', 'invisible');
+        }
+      });
+      
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,387 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Mock blog posts data
+const blogPosts = [
+  {
+    slug: 'decouverte-bdsm-debutants',
+    title: 'Découverte du BDSM : Guide Complet pour Débutants',
+    excerpt: 'Plongez dans l\'univers fascinant du BDSM. Découvrez les bases, la sécurité, et comment explorer vos désirs en toute confiance.',
+    category: 'BDSM',
+    publishedAt: '2025-01-15',
+    readTime: '8 min',
+    author: 'Dr. Sensuel',
+    tags: ['BDSM', 'Débutants', 'Sécurité', 'Découverte'],
+    isExplicit: true,
+    featured: true
+  },
+  {
+    slug: 'art-libertinage-moderne',
+    title: 'L\'Art du Libertinage Moderne : Éthique et Plaisir',
+    excerpt: 'Redécouvrez le libertinage comme un art de vivre. Éthique, consentement et exploration des plaisirs partagés.',
+    category: 'Libertinage',
+    publishedAt: '2025-01-12',
+    readTime: '10 min',
+    author: 'Libertine Experte',
+    tags: ['Libertinage', 'Éthique', 'Consentement', 'Plaisir'],
+    isExplicit: false,
+    featured: true
+  },
+  {
+    slug: 'roleplay-scenarios-avances',
+    title: 'Scénarios de Roleplay Avancés : Créer l\'Intensité',
+    excerpt: 'Maîtrisez l\'art du roleplay avec des scénarios sophistiqués qui stimulent l\'imagination et intensifient l\'expérience.',
+    category: 'Roleplay',
+    publishedAt: '2025-01-10',
+    readTime: '12 min',
+    author: 'Maître de l\'Imagination',
+    tags: ['Roleplay', 'Scénarios', 'Intensité', 'Créativité'],
+    isExplicit: true,
+    featured: true
+  },
+  {
+    slug: 'communication-sexe-couple',
+    title: 'Communication Sexuelle : Le Secret d\'une Vie Érotique Épanouie',
+    excerpt: 'Apprenez à communiquer vos désirs, limites et fantasmes pour une intimité plus profonde et satisfaisante.',
+    category: 'Communication',
+    publishedAt: '2025-01-08',
+    readTime: '7 min',
+    author: 'Dr. Sensuel',
+    tags: ['Communication', 'Couple', 'Désirs', 'Intimité'],
+    isExplicit: false,
+    featured: false
+  },
+  {
+    slug: 'toys-sexe-choix-utilisation',
+    title: 'Sex Toys : Guide Complet du Choix à l\'Utilisation',
+    excerpt: 'Découvrez l\'univers des sex toys : comment choisir, utiliser et intégrer ces accessoires dans votre vie intime.',
+    category: 'Sex Toys',
+    publishedAt: '2025-01-05',
+    readTime: '9 min',
+    author: 'Libertine Experte',
+    tags: ['Sex Toys', 'Guide', 'Utilisation', 'Plaisir'],
+    isExplicit: false,
+    featured: false
+  },
+  {
+    slug: 'fantasmes-tabous-exploration',
+    title: 'Fantasmes et Tabous : L\'Art de l\'Exploration Consciente',
+    excerpt: 'Osez explorer vos fantasmes les plus profonds dans un cadre sécurisé et bienveillant.',
+    category: 'Fantasmes',
+    publishedAt: '2025-01-03',
+    readTime: '11 min',
+    author: 'Maître de l\'Imagination',
+    tags: ['Fantasmes', 'Tabous', 'Exploration', 'Découverte'],
+    isExplicit: true,
+    featured: false
+  },
+  {
+    slug: 'bdsm-securite-protocoles',
+    title: 'BDSM : Protocoles de Sécurité Essentiels',
+    excerpt: 'Maîtrisez les protocoles de sécurité essentiels pour des pratiques BDSM sûres et responsables.',
+    category: 'BDSM',
+    publishedAt: '2025-01-01',
+    readTime: '15 min',
+    author: 'Dr. Sensuel',
+    tags: ['BDSM', 'Sécurité', 'Protocoles', 'Responsabilité'],
+    isExplicit: true,
+    featured: false
+  },
+  {
+    slug: 'libertinage-premiere-fois',
+    title: 'Première Expérience Libertinage : Guide du Débutant',
+    excerpt: 'Préparez-vous pour votre première expérience libertine avec ce guide complet et bienveillant.',
+    category: 'Libertinage',
+    publishedAt: '2024-12-28',
+    readTime: '13 min',
+    author: 'Libertine Experte',
+    tags: ['Libertinage', 'Première fois', 'Guide', 'Préparation'],
+    isExplicit: false,
+    featured: false
+  }
+];
+
+const categories = [
+  { name: 'BDSM', count: 8, color: 'bg-red-100 text-red-800', icon: '🔗' },
+  { name: 'Libertinage', count: 6, color: 'bg-purple-100 text-purple-800', icon: '💋' },
+  { name: 'Roleplay', count: 4, color: 'bg-blue-100 text-blue-800', icon: '🎭' },
+  { name: 'Sex Toys', count: 3, color: 'bg-pink-100 text-pink-800', icon: '🦄' },
+  { name: 'Fantasmes', count: 5, color: 'bg-orange-100 text-orange-800', icon: '✨' },
+  { name: 'Communication', count: 4, color: 'bg-green-100 text-green-800', icon: '💬' }
+];
+
+// Get search params
+const { searchParams } = Astro.url;
+const search = searchParams.get('search') || '';
+const category = searchParams.get('category') || '';
+
+// Filter posts based on search and category
+let filteredPosts = blogPosts;
+if (search) {
+  filteredPosts = filteredPosts.filter(post => 
+    post.title.toLowerCase().includes(search.toLowerCase()) ||
+    post.excerpt.toLowerCase().includes(search.toLowerCase()) ||
+    post.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
+  );
+}
+if (category) {
+  filteredPosts = filteredPosts.filter(post => 
+    post.category.toLowerCase() === category.toLowerCase()
+  );
+}
+---
+
+<Layout 
+  title="Blog - Mad2Moi Blog"
+  description="Découvrez nos articles sur l'exploration érotique, le BDSM, le libertinage et le bien-être sexuel. Contenu mature et éducatif pour adultes consentants."
+>
+  <!-- Hero Section -->
+  <section class="relative py-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-secondary-900 via-primary-900 to-secondary-800">
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ec4899" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 font-elegant text-glow">
+        Blog <span class="text-primary-400">Mad2Moi</span>
+      </h1>
+      <p class="text-xl text-secondary-300 mb-8 max-w-3xl mx-auto">
+        Explorez nos articles éducatifs sur l'exploration érotique et le bien-être sexuel
+      </p>
+      
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto mb-8">
+        <form class="flex gap-4" method="GET">
+          <input
+            type="search"
+            name="search"
+            placeholder="Rechercher un article..."
+            value={search}
+            class="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent text-white placeholder-white/60 backdrop-blur-sm text-lg"
+          />
+          <button
+            type="submit"
+            class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+          >
+            🔍 Rechercher
+          </button>
+        </form>
+      </div>
+      
+      <!-- Active filters -->
+      {(search || category) && (
+        <div class="flex flex-wrap gap-2 justify-center mb-6">
+          {search && (
+            <span class="px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full text-sm border border-primary-500/30">
+              Recherche: {search}
+            </span>
+          )}
+          {category && (
+            <span class="px-3 py-1 bg-sensual-500/20 text-sensual-300 rounded-full text-sm border border-sensual-500/30">
+              Catégorie: {category}
+            </span>
+          )}
+          <a href="/blog" class="px-3 py-1 bg-secondary-500/20 text-secondary-300 rounded-full text-sm border border-secondary-500/30 hover:bg-secondary-500/30 transition-colors">
+            ✕ Effacer les filtres
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Categories Filter -->
+  <section class="py-12 bg-gradient-to-b from-secondary-900 to-secondary-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a 
+          href="/blog"
+          class={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 ${
+            !category 
+              ? 'bg-primary-600 text-white shadow-lg' 
+              : 'bg-secondary-700/50 text-secondary-300 hover:bg-secondary-600/50'
+          }`}
+        >
+          📚 Toutes
+        </a>
+        {categories.map((cat) => (
+          <a 
+            href={`/blog?category=${cat.name.toLowerCase()}`}
+            class={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 ${
+              category === cat.name.toLowerCase()
+                ? 'bg-primary-600 text-white shadow-lg'
+                : 'bg-secondary-700/50 text-secondary-300 hover:bg-secondary-600/50'
+            }`}
+          >
+            {cat.icon} {cat.name} ({cat.count})
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Posts -->
+  <section class="py-20 bg-gradient-to-b from-secondary-800 to-secondary-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {filteredPosts.length > 0 ? (
+        <>
+          <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-white mb-4 font-elegant">
+              {search || category ? `Résultats de recherche` : 'Tous nos articles'}
+            </h2>
+            <p class="text-secondary-300">
+              {filteredPosts.length} article{filteredPosts.length > 1 ? 's' : ''} trouvé{filteredPosts.length > 1 ? 's' : ''}
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.map((post) => (
+              <article class="card-sensual hover:border-glow group transform hover:scale-105 transition-all duration-500">
+                <div class="aspect-video bg-gradient-to-br from-primary-800/50 to-secondary-800/50 rounded-xl mb-6 overflow-hidden border border-primary-700/30">
+                  <div class="w-full h-full flex items-center justify-center">
+                    <span class="text-6xl opacity-60">{post.isExplicit ? '🔥' : '💋'}</span>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="text-xs font-medium px-3 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
+                    {post.category}
+                  </span>
+                  {post.isExplicit && (
+                    <span class="text-xs font-medium px-3 py-1 bg-red-500/20 text-red-300 rounded-full border border-red-500/30">
+                      🔥 Explicite
+                    </span>
+                  )}
+                  {post.featured && (
+                    <span class="text-xs font-medium px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full border border-yellow-500/30">
+                      ⭐ À la une
+                    </span>
+                  )}
+                  <span class="text-sm text-secondary-400">{post.readTime}</span>
+                </div>
+                
+                <h3 class="text-xl font-semibold text-white mb-3 group-hover:text-primary-400 transition-colors font-elegant">
+                  <a href={`/blog/${post.slug}`}>{post.title}</a>
+                </h3>
+                
+                <p class="text-secondary-300 mb-4 line-clamp-3 leading-relaxed">{post.excerpt}</p>
+                
+                <div class="flex items-center justify-between text-sm text-secondary-400 mb-4">
+                  <span class="font-medium text-primary-300">{post.author}</span>
+                  <time datetime={post.publishedAt}>
+                    {new Date(post.publishedAt).toLocaleDateString('fr-FR', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                  {post.tags.slice(0, 3).map((tag) => (
+                    <span class="text-xs px-2 py-1 bg-secondary-700/50 text-secondary-300 rounded border border-secondary-600/30">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="text-center py-20">
+          <div class="text-8xl mb-6 opacity-60">🔍</div>
+          <h2 class="text-3xl font-bold text-white mb-4 font-elegant">
+            Aucun article trouvé
+          </h2>
+          <p class="text-secondary-300 mb-8 max-w-md mx-auto">
+            Aucun article ne correspond à votre recherche. Essayez avec d'autres mots-clés ou parcourez toutes nos catégories.
+          </p>
+          <a href="/blog" class="btn-primary">
+            📚 Voir tous les articles
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Newsletter CTA -->
+  <section class="py-20 bg-gradient-to-r from-primary-900 to-secondary-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-4xl font-bold text-white mb-6 font-elegant">
+        Restez Informé des Dernières Tendances
+      </h2>
+      <p class="text-xl text-primary-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+        Recevez nos meilleurs articles directement dans votre boîte mail. 
+        <span class="text-white font-semibold">Pas de spam, juste du contenu de qualité pour adultes.</span>
+      </p>
+      
+      <form class="max-w-md mx-auto flex gap-4 mb-6" id="blog-newsletter">
+        <input
+          type="email"
+          placeholder="Votre adresse email"
+          class="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent text-white placeholder-white/60 backdrop-blur-sm"
+          required
+        />
+        <button
+          type="submit"
+          class="px-6 py-3 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors duration-200"
+        >
+          S'abonner
+        </button>
+      </form>
+      
+      <p class="text-sm text-primary-200">
+        En vous abonnant, vous acceptez notre 
+        <a href="/privacy" class="underline hover:no-underline text-white">politique de confidentialité</a>.
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const blogNewsletter = document.getElementById('blog-newsletter');
+    
+    if (blogNewsletter) {
+      blogNewsletter.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target as HTMLFormElement);
+        const email = formData.get('email') as string;
+        
+        if (!email) return;
+        
+        try {
+          const response = await fetch('/api/newsletter/subscribe', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          });
+          
+          if (response.ok) {
+            alert('Merci pour votre inscription ! Vous recevrez bientôt nos derniers articles.');
+            (e.target as HTMLFormElement).reset();
+          } else {
+            alert('Une erreur est survenue. Veuillez réessayer.');
+          }
+        } catch (error) {
+          console.error('Newsletter subscription error:', error);
+          alert('Une erreur est survenue. Veuillez réessayer.');
+        }
+      });
+    }
+  });
+</script>
+
+
